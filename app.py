@@ -18,7 +18,8 @@ class CodePreprocess:
         return code
 
 
-from flask import Flask
+from flask import Flask, request, render_template
+import traceback
 import fasttext as ft
 
 app = Flask(__name__)
@@ -48,17 +49,17 @@ def ping():
 @app.route('/check', methods=['GET', 'POST'])
 def check():
     if request.method == 'GET':
-        return render_template('html/index.html')
+        return render_template('index.html')
     else:
         try:
             code = request.form['code']
             if not code or len(code) <= 20:
-                return render_template('html/index.html', error='Please type more than 20 characters!')
+                return render_template('index.html', error='Please type more than 20 characters!')
             language, score = ci.pred(code)
-            return render_template('html/index.html', language=language, score=score, code=code)
+            return render_template('index.html', language=language, score=score, code=code)
         except:
             traceback.print_exc()
-            return render_template('html/index.html', error='Unknown error has occurred, please try again!')
+            return render_template('index.html', error='Unknown error has occurred, please try again!')
  
  
 if __name__ == '__main__':
